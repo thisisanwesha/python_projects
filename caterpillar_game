@@ -1,0 +1,120 @@
+import turtle
+import time
+import random
+delay=0.1
+score=0
+high_score=0
+wn=turtle.Screen()
+wn.title("Caterpillar Game")
+wn.bgcolor("white")
+wn.setup(width=800, height = 800)
+wn.tracer(0)
+head=turtle.Turtle()
+head.shape("circle")
+head.color("black")
+head.penup()
+head.goto(0,0)
+head.direction="Stop"
+food=turtle.Turtle()
+food.speed(0)
+food.shape(random.choice(['arrow', 'circle', 'classic', 'square', 'triangle', 'turtle']))
+food.color(random.choice(['orange', 'hotpink', 'green', 'blue', 'red', 'gold', 'LightSeaGreen', 'salmon', 'coral1']))
+food.penup()
+food.goto(random.randint(-300,300),random.randint(-300,300))
+pen=turtle.Turtle()
+pen.speed(0)
+pen.shape("circle")
+pen.color("black")
+pen.penup()
+pen.hideturtle()
+pen.goto(350,350)
+pen.write("Score: 0 High Score: 0 ", align = 'right', font = ("arial", 24, "bold"))
+def move_up():
+    if head.direction != 'down':
+        head.direction = 'up'
+
+def move_down():
+    if head.direction != 'up':
+        head.direction = 'down'
+        
+def move_left():
+    if head.direction != 'right':
+        head.direction = 'left'
+        
+def move_right():
+    if head.direction != 'left':
+        head.direction = 'right'
+        
+def move():
+    if head.direction == 'up':
+        head.sety(head.ycor()+20)
+    if head.direction == 'down':
+        head.sety(head.ycor()-20)
+    if head.direction == 'left':
+        head.setx(head.xcor()-20)
+    if head.direction == 'right':
+        head.setx(head.xcor()+20)
+        
+wn.listen()
+wn.onkeypress(move_up, "Up")
+wn.onkeypress(move_down, "Down")
+wn.onkeypress(move_left, "Left")
+wn.onkeypress(move_right, "Right")
+body = []
+def game_over():
+    time.sleep(1)
+    head.goto(0, 0)
+    food.goto(random.randint(-300,300),random.randint(-300,300))
+    head.direction = "Stop"
+    for i in body:
+        i.goto(1200, 1200)
+    body.clear()
+    score = 0
+    delay = 0.1
+    pen.clear()
+    pen.write("Score : {} High Score : {} ".format(score, high_score), align="right", font=("arial", 24, "bold"))
+        
+while True:
+    wn.update()
+    if head.xcor()<-390 or head.xcor()>390 or head.ycor()<-390 or head.ycor()>390:
+        game_over()
+    if head.distance(food) < 20:
+        food.shape(random.choice(['arrow', 'circle', 'classic', 'square', 'triangle', 'turtle']))
+        food.color(random.choice(['orange', 'hotpink', 'green', 'blue', 'red', 'gold', 'LightSeaGreen', 'salmon', 'coral1']))
+        food.goto(random.randint(-300,300),random.randint(-300,300))  
+        
+        new_part = turtle.Turtle()
+        new_part.speed(0)
+        new_part.shape("circle")
+        new_part.color(random.choice(['orange', 'hotpink', 'green', 'blue', 'red', 'gold', 'LightSeaGreen', 'salmon', 'coral1']))
+        new_part.penup()
+        body.append(new_part)
+        delay = delay - 0.001
+        score = score+10
+        if score > high_score:
+            high_score = score
+        pen.clear()
+        pen.write("Score : {} High Score : {} ".format(score, high_score), align="right", font=("arial", 24, "bold"))
+        food.goto(random.randint(-300,300),random.randint(-300,300))  
+
+    
+       
+    for index in range(len(body)-1, 0, -1):
+        x = body[index-1].xcor()
+        y = body[index-1].ycor()
+        body[index].goto(x, y)
+    if len(body)>0:
+        x = head.xcor()
+        y = head.ycor()
+        body[0].goto(x, y)
+    move()
+      
+    for i in body:
+        if i.distance(head)<20:
+            game_over()   
+    
+    
+    time.sleep(delay)
+    
+wn.mainloop()
+            
