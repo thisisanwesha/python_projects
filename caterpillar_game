@@ -33,6 +33,7 @@ def move_up():
     if head.direction != 'down':
         head.direction = 'up'
 
+#defining moving keys
 def move_down():
     if head.direction != 'up':
         head.direction = 'down'
